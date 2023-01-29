@@ -1,0 +1,4 @@
+Fable.Core,4.0.0-theta-007,Transitive,Main,false,true,false,true
+FSharp.Core,7.0,Direct,Main,false,true,false,true
+Fable.Flutter,1.0.0-beta-004,Direct,Main,false,true,false,true
+Elmish.Flutter,1.0.0-beta-001,Direct,Main,false,true,false,true

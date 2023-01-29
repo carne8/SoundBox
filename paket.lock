@@ -1,0 +1,11 @@
+NUGET
+  remote: https://api.nuget.org/v3/index.json
+    Elmish.Flutter (1.0.0-beta-001)
+      Fable.Flutter (>= 1.0.0-beta-001) - restriction: >= net6.0
+      FSharp.Core (>= 6.0.6) - restriction: >= net6.0
+    Fable.Core (4.0.0-theta-007) - restriction: >= net6.0
+    FSharp.Core (7.0)
+  remote: D:\code\perso\Fable.Flutter\src\Fable.Flutter\bin\Release\
+    Fable.Flutter (1.0.0-beta-004)
+      Fable.Core (>= 4.0.0-theta-005) - restriction: >= net6.0
+      FSharp.Core (>= 6.0.6) - restriction: >= net6.0

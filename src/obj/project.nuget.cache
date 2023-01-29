@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "V2AUSGZbQVZevA4ZLE2wo9sEzRpZLzFcyc5CZWXcZJACDFXhrIsdipe+dN4NCqFsfw2XxYd54RrFrU6eJ9C+XA==",
+  "success": true,
+  "projectFilePath": "D:\\code\\perso\\SoundBox\\SoundBox-Flutter\\src\\App.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gaelb\\.nuget\\packages\\elmish.flutter\\1.0.0-beta-001\\elmish.flutter.1.0.0-beta-001.nupkg.sha512",
+    "C:\\Users\\gaelb\\.nuget\\packages\\fable.core\\4.0.0-theta-007\\fable.core.4.0.0-theta-007.nupkg.sha512",
+    "C:\\Users\\gaelb\\.nuget\\packages\\fable.flutter\\1.0.0-beta-004\\fable.flutter.1.0.0-beta-004.nupkg.sha512",
+    "C:\\Users\\gaelb\\.nuget\\packages\\fsharp.core\\7.0.0\\fsharp.core.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

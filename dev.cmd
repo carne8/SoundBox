@@ -1,0 +1,1 @@
+dotnet fable watch ./src -o ./lib --lang dart
