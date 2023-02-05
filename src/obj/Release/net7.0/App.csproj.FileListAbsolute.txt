@@ -1,6 +1,0 @@
-D:\code\perso\SoundBox\SoundBox-Flutter\src\bin\Release\net7.0\App.deps.json
-D:\code\perso\SoundBox\SoundBox-Flutter\src\bin\Release\net7.0\App.runtimeconfig.json
-D:\code\perso\SoundBox\SoundBox-Flutter\src\obj\Release\net7.0\App.GeneratedMSBuildEditorConfig.editorconfig
-D:\code\perso\SoundBox\SoundBox-Flutter\src\obj\Release\net7.0\App.AssemblyInfoInputs.cache
-D:\code\perso\SoundBox\SoundBox-Flutter\src\obj\Release\net7.0\App.AssemblyInfo.cs
-D:\code\perso\SoundBox\SoundBox-Flutter\src\obj\Release\net7.0\App.genruntimeconfig.cache

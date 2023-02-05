@@ -43,8 +43,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-.fake
-.paket
-/packages
-/paket-files
-/lib
+.fake/
+.paket/
+packages/
+paket-files/
+lib/
+bin/
+obj/
+lib/
