@@ -5,6 +5,8 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Libs/Fable.Core.DartInterop.fs" />
+    <Compile Include="Libs/Fable.Flutter.Http.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
 
     <Compile Include="App/App.Types.fs" />
@@ -12,6 +14,11 @@
     <Compile Include="App/App.View.fs" />
 
     <Compile Include="main.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <ProjectReference Include="./Libs/Fable.Dart/Fable.Dart.fsproj" /> -->
+    <ProjectReference Include="./Libs/Elmish.Flutter/Elmish.Flutter.fsproj" />
+    <ProjectReference Include="./Libs/Fable.Flutter/Fable.Flutter.fsproj" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

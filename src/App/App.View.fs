@@ -1,15 +1,12 @@
 module App.View
 
 open App
-open Fable.Core.JsInterop
 open Fable.Core.Dart
 open Flutter.Widgets
 open Flutter.Material
-open Flutter.Animation
 open Flutter.Painting
-open Flutter.Rendering
 
-let view (model: Model) (dispatch: Msg -> unit) context : Widget =
+let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget =
     Scaffold(
         body = CustomScrollView(
             slivers = [|
@@ -17,12 +14,12 @@ let view (model: Model) (dispatch: Msg -> unit) context : Widget =
                     pinned = true,
                     expandedHeight = 200.0,
                     flexibleSpace = FlexibleSpaceBar(
-                        title = Text("Sounds", style = TextStyle(fontSize = 35)),
+                        title = Text("Sounds", style = TextStyle(fontSize = 35, color = Theme.of'(context).colorScheme.onBackground)),
                         centerTitle = true
                     )
                 )
                 SliverPadding(
-                    padding = unbox (EdgeInsets.only(top = 60.)),
+                    padding = (EdgeInsets.only(top = 60.)),
                     sliver =
                         SliverFixedExtentList(
                             itemExtent = 60.,

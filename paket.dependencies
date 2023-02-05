@@ -2,5 +2,4 @@ source https://api.nuget.org/v3/index.json
 source D:\code\perso\Fable.Flutter\src\Fable.Flutter\bin\Release\
 
 nuget Elmish.Flutter
-nuget Fable.Flutter
 nuget FSharp.Core

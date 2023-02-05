@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Elmish for Flutter</Description>
+    <Version>1.0.0</Version>
+    <PackageVersion>1.0.0-beta-001</PackageVersion>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs" PackagePath="fable\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="prelude.fs" />
+    <Compile Include="cmd.fs" />
+    <!-- <Compile Include="cmd.obsolete.fs" /> -->
+    <Compile Include="sub.fs" />
+    <Compile Include="ring.fs" />
+    <Compile Include="program.fs" />
+    <Compile Include="flutter.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fable.Flutter\Fable.Flutter.fsproj" />
+  </ItemGroup>
+  <Import Project="..\..\..\.paket\Paket.Restore.targets" />
+</Project>
