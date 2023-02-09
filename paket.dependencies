@@ -1,5 +1,6 @@
 source https://api.nuget.org/v3/index.json
-source D:\code\perso\Fable.Flutter\src\Fable.Flutter\bin\Release\
+source D:\code\perso\Fable\Fable.Dart
 
-nuget Elmish.Flutter
+nuget Fable.Dart
 nuget FSharp.Core
+nuget Fable.Core prerelease
