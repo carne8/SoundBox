@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,6 +8,9 @@
     <Compile Include="Libs/Fable.Core.DartInterop.fs" />
     <Compile Include="Libs/Fable.Flutter.Http.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
+
+    <Compile Include="Features/Notion.API.fs" />
+    <Compile Include="Features/Sounds.API.fs" />
 
     <Compile Include="App/App.Types.fs" />
     <Compile Include="App/App.State.fs" />

@@ -1,5 +1,4 @@
 source https://api.nuget.org/v3/index.json
-source D:\code\perso\Fable\Fable.Dart
 
 nuget Fable.Dart
 nuget FSharp.Core
