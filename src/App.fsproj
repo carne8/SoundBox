@@ -5,10 +5,11 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Libs/Fable.Core.DartInterop.fs" />
     <Compile Include="Libs/Fable.Flutter.Http.fs" />
+    <Compile Include="Libs/Fable.Flutter.Dotenv.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
 
+    <Compile Include="Features/Secrets.fs" />
     <Compile Include="Features/Notion.API.fs" />
     <Compile Include="Features/Sounds.API.fs" />
 
@@ -19,7 +20,6 @@
     <Compile Include="main.fs" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <ProjectReference Include="./Libs/Fable.Dart/Fable.Dart.fsproj" /> -->
     <ProjectReference Include="./Libs/Elmish.Flutter/Elmish.Flutter.fsproj" />
     <ProjectReference Include="./Libs/Fable.Flutter/Fable.Flutter.fsproj" />
   </ItemGroup>

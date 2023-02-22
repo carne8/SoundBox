@@ -51,3 +51,6 @@ lib/
 bin/
 obj/
 lib/
+src/*.csproj
+
+.env*

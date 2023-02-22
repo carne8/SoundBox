@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
   http: ^0.13.5
+  dotenv: ^4.1.0
 
 dev_dependencies:
   flutter_test:

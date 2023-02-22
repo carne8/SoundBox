@@ -2,7 +2,6 @@ module Fable.Dart.Http
 
 open Fable.Core
 open Fable.Core.Dart
-open Fable.Core.DartInterop
 open Fable.Dart.Future
 open System.Runtime.InteropServices
 
