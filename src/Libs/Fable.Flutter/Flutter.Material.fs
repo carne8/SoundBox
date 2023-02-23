@@ -31767,12 +31767,9 @@ type TextTheme [<IsConst; NamedParams>]
 type Theme [<IsConst; NamedParams>] (data: ThemeData, child: Widget, [<Optional>] key: Key) =
     inherit Widget()
 
-[<Fable.Core.Erase>]
+[<RequireQualifiedAccess>]
 module Theme =
-    let inline of' (context: BuildContext) : ThemeData =
-        emitExpr
-            (import "Theme" "package:flutter/material.dart", context)
-            "$0.of($1)"
+    let inline of' (context: BuildContext) : ThemeData = emitExpr (import "Theme" "package:flutter/material.dart", context) "$0.of($1)"
 
 /// https://api.flutter.dev/flutter/material/ThemeDataTween-class.html
 [<ImportMember("package:flutter/material.dart")>]

@@ -1,20 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Libs/Fable.Dart.Environment.fs" />
     <Compile Include="Libs/Fable.Flutter.Http.fs" />
     <Compile Include="Libs/Fable.Flutter.Dotenv.fs" />
     <Compile Include="Libs/Fable.Flutter.PathProvider.fs" />
     <Compile Include="Libs/Fable.Flutter.Dio.fs" />
+    <Compile Include="Libs/Fable.Flutter.AudioPlayer.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
 
     <Compile Include="Features/Notion.API.fs" />
     <Compile Include="Features/Sounds.API.fs" />
     <Compile Include="Features/FileManager.fs" />
+    <Compile Include="Features/SoundUpdater.fs" />
 
     <Compile Include="App/App.Types.fs" />
     <Compile Include="App/App.State.fs" />

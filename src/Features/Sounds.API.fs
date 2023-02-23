@@ -7,18 +7,18 @@ open Fable.Dart.Environment
 // import "dart:core";
 
 type RemoteSound =
-    { name: string
-      soundUri: string
-      imageUri: string }
+    { Name: string
+      SoundUri: string
+      ImageUri: string }
 
 let private databaseId: string = String.fromEnvironment "NOTION_DATABASE_ID"
 
-let private retrieveSoundPages () : Result<(string * string * string * string * string * string) list, string> Future =
+let private retrieveSoundPages () : Result<(string * string * string * string * string * string) array, string> Future =
     databaseId
     |> Notion.Database.retrieveContent
     |> FutureResult.map (fun response -> response?results)
-    |> FutureResult.map Seq.toList
-    |> FutureResult.map (List.map (fun notionSoundPage ->
+    |> FutureResult.map Seq.toArray
+    |> FutureResult.map (Array.map (fun notionSoundPage ->
         notionSoundPage?id |> string,
         notionSoundPage?properties?Name?id,
         notionSoundPage?properties?Order?id,
@@ -43,17 +43,20 @@ let private createSoundFromPageProps (nameResult: Map<string, dynamic>, indexRes
     let soundUri = (soundResult?files |> Array.head)?file?url
     let imageUri = (imageResult?files |> Array.head)?file?url
 
-    { name = name
-      soundUri = soundUri
-      imageUri = imageUri }
+    { Name = name
+      SoundUri = soundUri
+      ImageUri = imageUri }
 
 let getSounds () =
     futureResult {
-        let! sounds = retrieveSoundPages() |> FutureResult.mapError List.singleton
+        let! sounds = retrieveSoundPages() |> FutureResult.mapError ((+) "Retrieve sounds page failed: " >> Array.singleton)
 
         return!
             sounds
-            |> List.map retrieveSoundPageProps
-            |> List.map (FutureResult.map createSoundFromPageProps)
+            |> Array.map retrieveSoundPageProps
+            |> Array.map (FutureResult.map createSoundFromPageProps)
+            |> Array.toList
             |> List.sequenceFutureResultA
+            |> FutureResult.map Array.ofList
+            |> FutureResult.mapError Array.ofList
     }

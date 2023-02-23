@@ -31,7 +31,11 @@ module Database =
         |> FutureResult.bind (fun (status, decoded) ->
             match status with
             | None | Some 200 -> Future.singleton (Ok decoded)
-            | _ -> Future.singleton (Error (decoded?message |> DartNullable.defaultValue "Cannot found error message"))
+            | _ ->
+                decoded?message
+                |> DartNullable.defaultValue "Cannot found error message"
+                |> Error
+                |> Future.singleton
         )
 
 module Page =

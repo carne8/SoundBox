@@ -55,3 +55,5 @@ src/*.csproj
 
 .env*
 run.cmd
+
+.vscode/launch.json
