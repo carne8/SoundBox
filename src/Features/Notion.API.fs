@@ -4,15 +4,14 @@ open Fable.Core.Dart
 open Fable.Dart
 open Fable.Dart.Future
 open Fable.Dart.Convert
-
-open Fable.Flutter.Dotenv
+open Fable.Dart.Environment
 
 #nowarn "59"
 // import "dart:core";
 
 let private http = Http.Client()
-let private notionVersion: string = App.Secrets.getSecret "NOTION_VERSION"
-let private notionToken: string = App.Secrets.getSecret "NOTION_SECRET"
+let private notionVersion: string = String.fromEnvironment "NOTION_VERSION"
+let private notionToken: string = String.fromEnvironment "NOTION_SECRET"
 
 let private headers =
     [ MapEntry("Authorization", "Bearer " + notionToken)

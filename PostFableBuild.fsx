@@ -24,4 +24,4 @@ srcPath
 |> Array.map (fun (path, content) -> path, Array.append [| "import \"dart:core\";" |] content)
 |> Array.map (fun (path, content) -> File.WriteAllLines(path, content); path)
 |> Array.map (fun path -> Path.GetRelativePath(__SOURCE_DIRECTORY__, path))
-|> Array.iter (printf "Fixed %s")
+|> Array.iter (printfn "Fixed %s")

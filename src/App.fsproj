@@ -5,13 +5,16 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Libs/Fable.Dart.Environment.fs" />
     <Compile Include="Libs/Fable.Flutter.Http.fs" />
     <Compile Include="Libs/Fable.Flutter.Dotenv.fs" />
+    <Compile Include="Libs/Fable.Flutter.PathProvider.fs" />
+    <Compile Include="Libs/Fable.Flutter.Dio.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
 
-    <Compile Include="Features/Secrets.fs" />
     <Compile Include="Features/Notion.API.fs" />
     <Compile Include="Features/Sounds.API.fs" />
+    <Compile Include="Features/FileManager.fs" />
 
     <Compile Include="App/App.Types.fs" />
     <Compile Include="App/App.State.fs" />

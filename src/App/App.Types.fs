@@ -1,13 +1,12 @@
 namespace App
 
+type Loadable<'T> =
+    | Loading of 'T option
+    | Loaded of 'T
+
 [<RequireQualifiedAccess>]
 type Msg =
-    | TextChanged of string
-    | ToggleSwitch of bool
-    | ToggleExtended of bool
+    | SoundsLoaded of FileManager.LocalSound array
 
 type Model =
-    { Text: string
-      Switch: bool
-      Extended: bool
-      Scale: float }
+    { Sounds: FileManager.LocalSound array Loadable }

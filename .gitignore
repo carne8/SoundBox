@@ -54,3 +54,4 @@ lib/
 src/*.csproj
 
 .env*
+run.cmd

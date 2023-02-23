@@ -2,6 +2,7 @@ module App.API.Sounds
 
 open Fable.Dart
 open Fable.Dart.Future
+open Fable.Dart.Environment
 
 // import "dart:core";
 
@@ -10,7 +11,7 @@ type RemoteSound =
       soundUri: string
       imageUri: string }
 
-let private databaseId: string = App.Secrets.getSecret "NOTION_DATABASE_ID"
+let private databaseId: string = String.fromEnvironment "NOTION_DATABASE_ID"
 
 let private retrieveSoundPages () : Result<(string * string * string * string * string * string) list, string> Future =
     databaseId
@@ -32,15 +33,15 @@ let private retrieveSoundPageProps (pageId, namePropId, indexPropId, soundPropId
         let! indexResult = Notion.Page.getProperty pageId indexPropId
         let! soundResult = Notion.Page.getProperty pageId soundPropId
         let! imageResult = Notion.Page.getProperty pageId imagePropId
-        let lastEditedTime = System.DateTime.Parse(lastEditedTime).ToString("yyyy-MM-dd-HH-mm-ss")
+        let lastEditedTime = System.DateTime.Parse(lastEditedTime).ToString("yyyy-MM-dd-HH-mm")
 
         return nameResult, indexResult, soundResult, imageResult, lastEditedTime
     }
 
 let private createSoundFromPageProps (nameResult: Map<string, dynamic>, indexResult: Map<string, dynamic>, soundResult: Map<string, dynamic>, imageResult: Map<string, dynamic>, lastEditedTime: string) =
     let name = $"{indexResult?number}-{(nameResult?results |> Array.item 0)?title?plain_text}-{lastEditedTime}"
-    let soundUri = (soundResult?files |> Array.item 0)?file?url
-    let imageUri = (imageResult?files |> Array.item 0)?file?url
+    let soundUri = (soundResult?files |> Array.head)?file?url
+    let imageUri = (imageResult?files |> Array.head)?file?url
 
     { name = name
       soundUri = soundUri

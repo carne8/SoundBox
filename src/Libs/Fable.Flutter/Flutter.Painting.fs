@@ -152,6 +152,7 @@ type BorderRadiusGeometry [<IsConst>] () =
 /// https://api.flutter.dev/flutter/painting/BorderRadius-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type BorderRadius =
+  inherit BorderRadiusGeometry
   [<IsConst>] static member all(radius: Radius): BorderRadius = nativeOnly
   static member circular(radius: float): BorderRadius = nativeOnly
   [<IsConst; NamedParams>] static member vertical([<Optional>] top: Radius, [<Optional>] bottom: Radius): BorderRadius = nativeOnly
@@ -204,7 +205,7 @@ type BorderDirectional [<IsConst; NamedParams>] ([<Optional>] top: BorderSide, [
 /// https://api.flutter.dev/flutter/painting/BoxDecoration-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type BoxDecoration [<IsConst; NamedParams>] ([<Optional>] color: Color, [<Optional>] image: DecorationImage, [<Optional>] border: BoxBorder, [<Optional>] borderRadius: BorderRadiusGeometry, [<Optional>] boxShadow: BoxShadow[], [<Optional>] gradient: Gradient, [<Optional>] backgroundBlendMode: BlendMode, [<Optional>] shape: BoxShape) =
-  class end
+  inherit Decoration()
 
 /// https://api.flutter.dev/flutter/painting/FittedSizes-class.html
 [<ImportMember("package:flutter/painting.dart")>]
@@ -395,18 +396,17 @@ type ResizeImage [<IsConst; NamedParams(fromIndex=1)>] (imageProvider: ImageProv
 /// https://api.flutter.dev/flutter/painting/NetworkImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type NetworkImage [<IsConst; NamedParams(fromIndex=1)>] (url: string, [<Optional>] scale: float, [<Optional>] headers: Dictionary<string, string>) =
-  class end
+  inherit Object()
 
-// TODO dart:io
-// /// https://api.flutter.dev/flutter/painting/FileImage-class.html
-// [<ImportMember("package:flutter/painting.dart")>]
-// type FileImage [<IsConst; NamedParams(fromIndex=1)>] (file: File, [<Optional>] scale: float) =
-//   class end
+/// https://api.flutter.dev/flutter/painting/FileImage-class.html
+[<ImportMember("package:flutter/painting.dart")>]
+type FileImage [<IsConst; NamedParams(fromIndex=1)>] (file: Fable.Dart.IO.File, [<Optional>] scale: float) =
+  inherit Object()
 
 /// https://api.flutter.dev/flutter/painting/MemoryImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type MemoryImage [<IsConst; NamedParams(fromIndex=1)>] (bytes: byte[], [<Optional>] scale: float) =
-  class end
+  inherit Object()
 
 /// https://api.flutter.dev/flutter/painting/ExactAssetImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
@@ -416,7 +416,7 @@ type ExactAssetImage [<IsConst; NamedParams(fromIndex=1)>] (assetName: string, [
 /// https://api.flutter.dev/flutter/painting/AssetImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type AssetImage [<IsConst; NamedParams(fromIndex=1)>] (assetName: string, [<Optional>] bundle: AssetBundle, [<Optional>] package: string) =
-  class end
+  inherit Object()
 
 /// https://api.flutter.dev/flutter/painting/ImageInfo-class.html
 [<ImportMember("package:flutter/painting.dart")>]
