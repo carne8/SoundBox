@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carne8.soundbox">
    <application
-        android:label="soundbox"
+        android:label="SoundBox"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
