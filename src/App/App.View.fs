@@ -4,7 +4,6 @@ open App
 open Fable.Core
 open Fable.Core.Dart
 open Fable.Dart.IO
-open Fable.Dart.Environment
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
@@ -68,14 +67,6 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                     children = [|
                         Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
                         Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
-                        Padding(
-                            padding = EdgeInsets.only(top = 35.),
-                            child = Column(children = [|
-                                Text(String.fromEnvironment "NOTION_VERSION", style = Theme.of'(context).textTheme.titleSmall)
-                                Text(String.fromEnvironment "NOTION_DATABASE_ID", style = Theme.of'(context).textTheme.titleSmall)
-                                Text(String.fromEnvironment "NOTION_SECRET", style = Theme.of'(context).textTheme.titleSmall)
-                            |])
-                        )
                     |]
                 ))
             | _, Loaded sounds ->

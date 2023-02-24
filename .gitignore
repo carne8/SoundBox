@@ -52,7 +52,7 @@ bin/
 obj/
 src/*.csproj
 
-.env*
+secrets.json
 run.cmd
 
 .vscode/launch.json
