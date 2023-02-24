@@ -8,7 +8,7 @@
     <Compile Include="Libs/Fable.Flutter.Dotenv.fs" />
     <Compile Include="Libs/Fable.Flutter.PathProvider.fs" />
     <Compile Include="Libs/Fable.Flutter.Dio.fs" />
-    <Compile Include="Libs/Fable.Flutter.AudioPlayer.fs" />
+    <Compile Include="Libs/Fable.Flutter.AudioPlayers.fs" />
     <Compile Include="Libs/DynamicColor.fs" />
 
     <Compile Include="Features/Notion.API.fs" />

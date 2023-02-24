@@ -27,7 +27,7 @@ module Database =
         |> FutureResult.catchError
         |> FutureResult.mapError string
         |> FutureResult.map (fun res -> res.body |> json.decode)
-        |> FutureResult.map (fun decoded -> decoded?status |> DartNullable.toOption |> Option.map int, decoded)
+        |> FutureResult.map (fun decoded -> decoded?status |> DartNullable.toOption |> Option.map int32, decoded)
         |> FutureResult.bind (fun (status, decoded) ->
             match status with
             | None | Some 200 -> Future.singleton (Ok decoded)
@@ -46,7 +46,7 @@ module Page =
         |> FutureResult.catchError
         |> FutureResult.mapError string
         |> FutureResult.map (fun res -> res.body |> json.decode)
-        |> FutureResult.map (fun decoded -> decoded?status |> DartNullable.toOption |> Option.map int, decoded)
+        |> FutureResult.map (fun decoded -> decoded?status |> DartNullable.toOption |> Option.map int32, decoded)
         |> FutureResult.bind (fun (status, decoded) ->
             match status with
             | None | Some 200 -> Future.singleton (Ok decoded)

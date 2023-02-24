@@ -2848,9 +2848,9 @@ type Feedback =
     class
     end
 
-/// https://api.flutter.dev/flutter/material/FlatButton-class.html
+/// https://api.flutter.dev/flutter/material/FilledButton-class.html
 [<ImportMember("package:flutter/material.dart")>]
-type FlatButton [<IsConst; NamedParams>]
+type FilledButton [<IsConst; NamedParams>]
     (
         onPressed: (unit -> unit),
         child: Widget,
@@ -2908,7 +2908,7 @@ type FlatButton [<IsConst; NamedParams>]
             [<Optional>] materialTapTargetSize: MaterialTapTargetSize,
             [<Optional>] minWidth: float,
             [<Optional>] height: float
-        ) : FlatButton =
+        ) : FilledButton =
         nativeOnly
 
 /// https://api.flutter.dev/flutter/material/FlexibleSpaceBar-class.html
@@ -31759,8 +31759,34 @@ type TextTheme [<IsConst; NamedParams>]
         [<Optional>] button: TextStyle,
         [<Optional>] overline: TextStyle
     ) =
-    class
-    end
+    member _.displayLarge: TextStyle = nativeOnly
+    member _.displayMedium: TextStyle = nativeOnly
+    member _.displaySmall: TextStyle = nativeOnly
+    member _.headlineLarge: TextStyle = nativeOnly
+    member _.headlineMedium: TextStyle = nativeOnly
+    member _.headlineSmall: TextStyle = nativeOnly
+    member _.titleLarge: TextStyle = nativeOnly
+    member _.titleMedium: TextStyle = nativeOnly
+    member _.titleSmall: TextStyle = nativeOnly
+    member _.bodyLarge: TextStyle = nativeOnly
+    member _.bodyMedium: TextStyle = nativeOnly
+    member _.bodySmall: TextStyle = nativeOnly
+    member _.labelLarge: TextStyle = nativeOnly
+    member _.labelMedium: TextStyle = nativeOnly
+    member _.labelSmall: TextStyle = nativeOnly
+    member _.headline1: TextStyle = nativeOnly
+    member _.headline2: TextStyle = nativeOnly
+    member _.headline3: TextStyle = nativeOnly
+    member _.headline4: TextStyle = nativeOnly
+    member _.headline5: TextStyle = nativeOnly
+    member _.headline6: TextStyle = nativeOnly
+    member _.subtitle1: TextStyle = nativeOnly
+    member _.subtitle2: TextStyle = nativeOnly
+    member _.bodyText1: TextStyle = nativeOnly
+    member _.bodyText2: TextStyle = nativeOnly
+    member _.caption: TextStyle = nativeOnly
+    member _.button: TextStyle = nativeOnly
+    member _.overline: TextStyle = nativeOnly
 
 /// https://api.flutter.dev/flutter/material/Theme-class.html
 [<ImportMember("package:flutter/material.dart")>]
@@ -31897,6 +31923,7 @@ type ThemeData [<NamedParams>]
     static member fallback() : ThemeData = nativeOnly
 
     member _.colorScheme : ColorScheme = nativeOnly
+    member _.textTheme : TextTheme = nativeOnly
 
 /// https://api.flutter.dev/flutter/material/ThemeExtension-class.html
 [<ImportMember("package:flutter/material.dart"); AbstractClass>]

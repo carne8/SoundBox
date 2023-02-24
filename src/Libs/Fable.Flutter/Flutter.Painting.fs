@@ -109,6 +109,7 @@ type AlignmentGeometry [<IsConst>] () =
 /// https://api.flutter.dev/flutter/painting/Alignment-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type Alignment [<IsConst>] (x: float, y: float) =
+  inherit AlignmentGeometry()
   [<IsConst>] static member topLeft: Alignment = nativeOnly
   [<IsConst>] static member topCenter: Alignment = nativeOnly
   [<IsConst>] static member topRight: Alignment = nativeOnly
@@ -122,6 +123,7 @@ type Alignment [<IsConst>] (x: float, y: float) =
 /// https://api.flutter.dev/flutter/painting/AlignmentDirectional-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type AlignmentDirectional [<IsConst>] (start: float, y: float) =
+  inherit AlignmentGeometry()
   [<IsConst>] static member topStart: AlignmentDirectional = nativeOnly
   [<IsConst>] static member topCenter: AlignmentDirectional = nativeOnly
   [<IsConst>] static member topEnd: AlignmentDirectional = nativeOnly

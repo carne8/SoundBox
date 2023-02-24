@@ -10,6 +10,7 @@ open Fable.Flutter.Dio
 
 type LocalSound =
     { Name: string
+      Path: string
       ImagePath: string
       SoundPath: string }
 
@@ -41,8 +42,8 @@ let retrieveSounds () =
             |> Array.map (fun x -> x.path)
             |> Array.map (fun path -> path.Replace("\\", "/"))
             |> Array.map (fun path -> path.Split('/') |> Array.last, path)
-            |> Array.map (fun (name, path) -> name, path + "/image.png", path + "/sound.mp3")
-            |> Array.map (fun (name, image, sound) -> { Name = name; ImagePath = image; SoundPath = sound })
+            |> Array.map (fun (name, path) -> path, name, path + "/image.png", path + "/sound.mp3")
+            |> Array.map (fun (path, name, image, sound) -> { Name = name; Path = path; ImagePath = image; SoundPath = sound })
             |> Array.sortBy (
                 (fun sound -> sound.Name.Split '-')
                 >> Array.head

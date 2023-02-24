@@ -44,7 +44,7 @@ type [<ImportMember(package)>] UrlSource(url: string) = inherit Source()
 [<ImportMember(package)>]
 type AudioPlayer() =
     member _.playerId: string = nativeOnly
-    member _.state: PlayerState = nativeOnly
+    member val state: PlayerState = nativeOnly with get, set
 
     /// Closes all StreamControllers.
     member _.dispose() : Future<unit> = nativeOnly

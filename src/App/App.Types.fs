@@ -27,13 +27,24 @@ type Sound =
           ImagePath = localSound.ImagePath }
 
 [<RequireQualifiedAccess>]
+type UpdateState =
+    | Loading
+    | LoadedSome of Update
+    | LoadedNone
+    | ApplyingUpdate
+
+
+[<RequireQualifiedAccess>]
 type Msg =
     | LocalSoundsLoaded of LocalSound array
     | RemoteSoundsLoaded of RemoteSound array
-    | UpdateLoaded of Update
+
+    | UpdateLoaded of Update option
+    | ApplyUpdate
+    | UpdateApplied
 
 type Model =
     { LocalSounds: LocalSound array Loadable
       RemoteSounds: RemoteSound array Loadable
       Sounds: Sound array Loadable
-      Update: Update option }
+      Update: UpdateState }

@@ -1,14 +1,19 @@
 module App.View
 
 open App
-open Fable.Dart.IO
 open Fable.Core
 open Fable.Core.Dart
+open Fable.Dart.IO
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
 open Fable.Flutter.AudioPlayers
+
+// import "dart:core";
+
+type DartNullable<'T> with
+    static member inline singleton x = x |> Some |> DartNullable.ofOption
 
 let soundComponent context (sound: Sound) =
     let primaryContainer = Theme.of'(context).colorScheme.primaryContainer
@@ -33,8 +38,7 @@ let soundComponent context (sound: Sound) =
         )
     )
     :> Widget
-    |> Some
-    |> DartNullable.ofOption
+    |> DartNullable.singleton
 
 let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget =
     let size = MediaQuery.of'(context).size
@@ -42,8 +46,30 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
 
     Scaffold(
         body =
-            match model.Sounds with
-            | Loaded sounds ->
+            match model.Update, model.Sounds with
+            | _, Loading _ -> Center(child = Text("Hello world !")) :> Widget
+            | UpdateState.ApplyingUpdate, Loaded _ ->
+                Center(child = Column(
+                    mainAxisAlignment = MainAxisAlignment.center,
+                    crossAxisAlignment = CrossAxisAlignment.center,
+                    children = [|
+                        CircularProgressIndicator()
+                        Padding(
+                            padding = EdgeInsets.only(top = 35.),
+                            child = Text("Installing sounds ...", style = Theme.of'(context).textTheme.titleLarge)
+                        )
+                    |]
+                ))
+            | _, Loaded sounds when sounds.Length = 0 ->
+                Center(child = Column(
+                    mainAxisAlignment = MainAxisAlignment.center,
+                    crossAxisAlignment = CrossAxisAlignment.center,
+                    children = [|
+                        Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
+                        Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
+                    |]
+                ))
+            | _, Loaded sounds ->
                 CustomScrollView(
                     slivers = [|
                         SliverAppBar(
@@ -53,49 +79,54 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                                 title = Text("Sounds", style = TextStyle(fontSize = 35, color = Theme.of'(context).colorScheme.onBackground)),
                                 centerTitle = true,
                                 titlePadding = EdgeInsets.only(bottom = 6.)
-                            )
-                        )
-                        // match model.Update with
-                        // | Some update ->
-                        //     SliverToBoxAdapter(
-                        //         child = ElevatedButton(
-                        //             onPressed = (fun _ -> ()),
-                        //             child = (Text("Update") :> Widget |> Some |> DartNullable.ofOption)
-                        //         )
-                        //     )
-                        // | None -> ()
-                        SliverPadding(
-                            padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
-                            sliver =
-                                SliverGrid(
-                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(3, mainAxisSpacing = buttonMargin, crossAxisSpacing = buttonMargin, childAspectRatio = 29. / 21.),
-                                    ``delegate`` = SliverChildBuilderDelegate(
-                                        childCount = sounds.Length,
-                                        builder = (fun ctx idx -> sounds |> Array.item idx |> soundComponent ctx)
-                                    )
-                                )
-                        )
-                        SliverPadding(
-                            padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
-                            sliver =
-                                SliverGrid(
-                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(3, mainAxisSpacing = buttonMargin, crossAxisSpacing = buttonMargin, childAspectRatio = 29. / 21.),
-                                    ``delegate`` = SliverChildBuilderDelegate(
-                                        childCount = sounds.Length,
-                                        builder = (fun ctx idx -> sounds |> Array.item idx |> soundComponent ctx)
-                                    )
-                                )
-                        )
-                        SliverPadding(padding = EdgeInsets.only(bottom = buttonMargin))
-                    |]
-                ) :> Widget
-            | Loading _ -> Text("Hello world !")
+                            ),
+                            actions = [|
+                                match model.Update with
+                                | UpdateState.LoadedSome update ->
+                                    let totalOperations = update.SoundsToDelete.Length + update.SoundsToDownload.Length
 
-        // floatingActionButton =
-        //     FloatingActionButton.extended(
-        //         icon = Icon Icons.plus_one,
-        //         label = Text "Button",
-        //         onPressed = (fun _ -> not model.Extended |> Msg.ToggleExtended |> dispatch),
-        //         isExtended = model.Extended
-        //     )
+                                    IconButton(
+                                        icon = Icon(Icons.cloud_sync),
+                                        onPressed = (fun _ ->
+                                            showDialog(
+                                                context = context,
+                                                builder = (fun _ctx -> AlertDialog(
+                                                    title = Text("Perform update ?", textAlign = Dart.TextAlign.center),
+                                                    content = Text($"This update will perform {totalOperations} operations", textAlign = Dart.TextAlign.center),
+                                                    actionsAlignment = MainAxisAlignment.spaceBetween,
+                                                    actions = [|
+                                                        OutlinedButton(
+                                                            style = ButtonStyle(),
+                                                            child = Text "Cancel",
+                                                            onPressed = Navigator.``of``(context).pop
+                                                        )
+                                                        FilledButton(
+                                                            child = (Text "Update"),
+                                                            onPressed = (fun _ ->
+                                                                Navigator.``of``(context).pop()
+                                                                Msg.ApplyUpdate |> dispatch
+                                                            )
+                                                        )
+                                                    |]
+                                                ))
+                                            ) |> ignore
+                                        )
+                                    )
+                                | _ -> ()
+                            |]
+                        )
+                        SliverPadding(
+                            padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
+                            sliver =
+                                SliverGrid(
+                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(3, mainAxisSpacing = buttonMargin, crossAxisSpacing = buttonMargin, childAspectRatio = 29. / 21.),
+                                    ``delegate`` = SliverChildBuilderDelegate(
+                                        childCount = sounds.Length,
+                                        builder = (fun ctx idx -> sounds |> Array.item idx |> soundComponent ctx)
+                                    )
+                                )
+                        )
+                        SliverToBoxAdapter(child = SizedBox(height = buttonMargin))
+                    |]
+                )
     )

@@ -2,6 +2,10 @@ module App.SoundUpdater
 
 open API.Sounds
 open FileManager
+open Fable.Dart.IO
+open Fable.Dart
+open Fable.Dart.Future
+
 
 type Update =
     { SoundsToDownload: RemoteSound array
@@ -28,5 +32,28 @@ let compareSounds (localSounds: LocalSound array) (remoteSounds: RemoteSound arr
             |> not
         )
 
-    { SoundsToDownload = soundsToInstall
-      SoundsToDelete = soundsToDelete }
+    match soundsToInstall.Length, soundsToDelete.Length with
+    | 0, 0 -> None
+    | _ ->
+        { SoundsToDownload = soundsToInstall
+          SoundsToDelete = soundsToDelete }
+        |> Some
+
+let applyUpdate (update: Update) =
+    future {
+        let! _ =
+            update.SoundsToDelete
+            |> Array.map (fun soundFolder -> (Directory soundFolder.Path).delete true)
+            |> Future.wait
+            |> Future.map ignore
+            |> Future.toVoid
+
+        let! _ =
+            update.SoundsToDownload
+            |> Array.map FileManager.downloadSound
+            |> Future.wait
+            |> Future.map ignore
+            |> Future.toVoid
+
+        ()
+    }
