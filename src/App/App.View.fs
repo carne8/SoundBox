@@ -8,7 +8,6 @@ open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
-open Fable.Flutter.AudioPlayers
 
 // import "dart:core";
 
@@ -24,9 +23,9 @@ let soundComponent context (sound: Sound) =
 
     GestureDetector(
         onTap = (fun _ ->
-            match sound.AudioPlayer.state with
-            | PlayerState.Playing -> sound.AudioPlayer.stop() |> ignore
-            | _ -> sound.AudioPlayer.play(DeviceFileSource sound.SoundPath) |> ignore
+            match sound.AudioPlayer.playing with
+            | true -> sound.AudioPlayer.stop() |> ignore
+            | false -> sound.AudioPlayer.play() |> ignore
         ),
         child = Container(
             child = image,
@@ -46,9 +45,18 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
 
     Scaffold(
         body =
-            match model.Update, model.Sounds with
-            | _, Loading _ -> Center(child = Text("Hello world !")) :> Widget
-            | UpdateState.ApplyingUpdate, Loaded _ ->
+            match model.Error, model.Update, model.Sounds with
+            | Some error, _, _ ->
+                Center(child = Column(
+                    mainAxisAlignment = MainAxisAlignment.center,
+                    crossAxisAlignment = CrossAxisAlignment.center,
+                    children = [|
+                        Text("An error ocurred", style = Theme.of'(context).textTheme.titleLarge)
+                        Text(error, style = Theme.of'(context).textTheme.titleMedium, textAlign = Dart.TextAlign.center)
+                    |]
+                )) :> Widget
+            | _, _, Loading _ -> Center(child = Text("Loading sounds"))
+            | _, UpdateState.ApplyingUpdate, Loaded _ ->
                 Center(child = Column(
                     mainAxisAlignment = MainAxisAlignment.center,
                     crossAxisAlignment = CrossAxisAlignment.center,
@@ -60,16 +68,22 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                         )
                     |]
                 ))
-            | _, Loaded sounds when sounds.Length = 0 ->
+            | _, _, Loaded sounds when sounds.Length = 0 ->
                 Center(child = Column(
                     mainAxisAlignment = MainAxisAlignment.center,
                     crossAxisAlignment = CrossAxisAlignment.center,
                     children = [|
-                        Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
-                        Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
+                        CircularProgressIndicator()
+                        Padding(
+                            padding = EdgeInsets.only(top = 35.),
+                            child = Column(children = [|
+                                Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
+                                Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
+                            |])
+                        )
                     |]
                 ))
-            | _, Loaded sounds ->
+            | _, _, Loaded sounds ->
                 CustomScrollView(
                     slivers = [|
                         SliverAppBar(

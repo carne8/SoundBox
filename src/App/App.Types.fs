@@ -1,10 +1,11 @@
 namespace App
 
-open Fable.Flutter.AudioPlayers
+open Fable.Flutter.JustAudio
 
 open API.Sounds
 open FileManager
 open SoundUpdater
+open Fable.Dart.Future
 
 type Loadable<'T> =
     | Loading of 'T option
@@ -12,19 +13,18 @@ type Loadable<'T> =
 
 type Sound =
     { AudioPlayer: AudioPlayer
-      SoundPath: string
       ImagePath: string }
 
-    static member private defaultAudioPlayer =
-        let player = AudioPlayer()
-        player.setPlayerMode PlayerMode.lowLatency |> ignore
-        player.setReleaseMode ReleaseMode.stop |> ignore
-        player
-
     static member fromLocalSound (localSound: LocalSound) =
-        { AudioPlayer = Sound.defaultAudioPlayer
-          SoundPath = localSound.SoundPath
-          ImagePath = localSound.ImagePath }
+        future {
+            let player = AudioPlayer()
+            let! _ = player.setFilePath(localSound.SoundPath, preload = true)
+
+            return
+                { AudioPlayer = player
+                  ImagePath = localSound.ImagePath }
+        }
+
 
 [<RequireQualifiedAccess>]
 type UpdateState =
@@ -38,6 +38,8 @@ type UpdateState =
 type Msg =
     | LocalSoundsLoaded of LocalSound array
     | RemoteSoundsLoaded of RemoteSound array
+    | SoundsLoaded of Sound array
+    | ErrorOcurred of string
 
     | UpdateLoaded of Update option
     | ApplyUpdate
@@ -47,4 +49,5 @@ type Model =
     { LocalSounds: LocalSound array Loadable
       RemoteSounds: RemoteSound array Loadable
       Sounds: Sound array Loadable
-      Update: UpdateState }
+      Update: UpdateState
+      Error: string option }

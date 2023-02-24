@@ -16,11 +16,21 @@ module Cmds =
     let fetchRemoteSounds () =
         Cmd.ofEffect (fun dispatch ->
             API.Sounds.getSounds()
-            |> FutureResult.map Msg.RemoteSoundsLoaded
-            |> FutureResult.map dispatch
-            |> FutureResult.mapError print
+            |> FutureResult.map (Msg.RemoteSoundsLoaded >> dispatch)
+            |> FutureResult.mapError (Array.head >> Msg.ErrorOcurred >> dispatch)
             |> ignore
         )
+
+    let loadSounds sounds =
+        Cmd.ofEffect (fun dispatch ->
+            sounds
+            |> Array.map Sound.fromLocalSound
+            |> Future.wait
+            |> Future.map Msg.SoundsLoaded
+            |> Future.map dispatch
+            |> ignore
+        )
+
 
     let applyUpdate (update: SoundUpdater.Update) =
         Cmd.ofEffect (fun dispatch ->
@@ -36,7 +46,8 @@ module State =
         { LocalSounds = Loading None
           RemoteSounds = Loading None
           Sounds = Loading None
-          Update = UpdateState.Loading },
+          Update = UpdateState.Loading
+          Error = None },
         Cmd.batch [
             Cmds.loadLocalSounds()
             Cmds.fetchRemoteSounds()
@@ -56,10 +67,8 @@ module State =
                     |> Cmd.ofMsg
                 | Loading _ -> Cmd.none
 
-            { model with
-                LocalSounds = Loaded sounds
-                Sounds = Loaded (sounds |> Array.map Sound.fromLocalSound) },
-            cmd
+            { model with LocalSounds = Loaded sounds },
+            Cmd.batch [ cmd; Cmds.loadSounds sounds ]
 
         | Msg.RemoteSoundsLoaded sounds ->
             let cmd =
@@ -72,6 +81,9 @@ module State =
                 | Loading _ -> Cmd.none
 
             { model with RemoteSounds = Loaded sounds }, cmd
+
+        | Msg.SoundsLoaded sounds -> { model with Sounds = Loaded sounds }, Cmd.none
+        | Msg.ErrorOcurred error -> { model with Error = Some error }, Cmd.none
 
         // Update
         | Msg.UpdateLoaded updateOpt ->
