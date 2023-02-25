@@ -12,8 +12,8 @@ open Flutter.Libs.DynamicColor
 type App(?key: Key) =
     inherit StatelessWidget(?key = key)
     override _.build(context) =
-        let defaultLightColorScheme = ColorScheme.fromSwatch(primarySwatch = Colors.purple)
-        let defaultDarkColorScheme = ColorScheme.fromSwatch(primarySwatch = Colors.purple, brightness = Brightness.dark)
+        let defaultLightColorScheme = ColorScheme.fromSeed(seedColor = Colors.lightBlue)
+        let defaultDarkColorScheme = ColorScheme.fromSeed(seedColor = Colors.lightBlue, brightness = Brightness.dark)
 
         DynamicColorBuilder(builder = (fun lightDynamic darkDynamic ->
             MaterialApp(
