@@ -8,6 +8,7 @@ open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
+open Fable.Flutter.AudioPlayers
 
 // import "dart:core";
 
@@ -23,9 +24,10 @@ let soundComponent context (sound: Sound) =
 
     GestureDetector(
         onTap = (fun _ ->
-            match sound.AudioPlayer.playing with
-            | true -> sound.AudioPlayer.stop() |> ignore
-            | false -> sound.AudioPlayer.play() |> ignore
+            match sound.AudioPlayer.state with
+            | PlayerState.Playing -> sound.AudioPlayer.stop()
+            | _ -> sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play
+            |> ignore
         ),
         child = Container(
             child = image,

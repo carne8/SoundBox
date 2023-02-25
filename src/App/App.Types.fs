@@ -1,6 +1,6 @@
 namespace App
 
-open Fable.Flutter.JustAudio
+open Fable.Flutter.AudioPlayers
 
 open API.Sounds
 open FileManager
@@ -13,15 +13,17 @@ type Loadable<'T> =
 
 type Sound =
     { AudioPlayer: AudioPlayer
+      SoundPath: string
       ImagePath: string }
 
     static member fromLocalSound (localSound: LocalSound) =
         future {
             let player = AudioPlayer()
-            let! _ = player.setFilePath(localSound.SoundPath, preload = true)
+            let! _ = player.setReleaseMode ReleaseMode.stop
 
             return
                 { AudioPlayer = player
+                  SoundPath = localSound.SoundPath
                   ImagePath = localSound.ImagePath }
         }
 

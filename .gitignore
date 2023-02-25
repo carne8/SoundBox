@@ -50,7 +50,7 @@ paket-files/
 lib/
 bin/
 obj/
-src/*.csproj
+src/**/*.csproj
 
 secrets.json
 run.cmd
