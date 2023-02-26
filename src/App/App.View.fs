@@ -24,7 +24,6 @@ let errorOcurred context error =
     :> Widget
 
 let fetchingApi context =
-    Fable.Core.Dart.print "fetchingApi"
     center [|
         CircularProgressIndicator()
         Padding(
@@ -55,74 +54,82 @@ let loadingSounds context =
     |]
 
 
+let forceStopSound sound = sound.AudioPlayer.stop() |> ignore
+
+let toggleSound model sound =
+    match model.SpamMode, sound.AudioPlayer.state with
+    | false, PlayerState.Playing -> forceStopSound sound
+    | true, _ ->
+        forceStopSound sound
+        sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play |> ignore
+    | _ -> sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play |> ignore
+
+
 let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget =
     let size = MediaQuery.of'(context).size
     let buttonMargin = 0.038 * size.width
-    match model.Sounds with
-    | Loaded sounds -> sounds.Length |> Dart.print
-    | _ -> Dart.print "Loading..."
 
-    Scaffold(
-        body =
-            match model.Error, model.Update, model.Sounds with
-            | Some error, _, _ -> errorOcurred context error
-            | _, UpdateState.Loading , Loaded sounds when sounds.Length = 0 -> fetchingApi context
-            | _, UpdateState.ApplyingUpdate, _ -> applyingUpdate context
-            | _, _, Loading _ -> loadingSounds context
-            | _, _, Loaded sounds ->
-                CustomScrollView(
-                    slivers = [|
-                        SliverAppBar(
-                            pinned = true,
-                            expandedHeight = (185. / 853.) * size.height,
-                            flexibleSpace = FlexibleSpaceBar(
-                                title = Text("Sounds", style = TextStyle(fontSize = 35, color = Theme.of'(context).colorScheme.onBackground)),
-                                centerTitle = true,
-                                titlePadding = EdgeInsets.only(bottom = 6.)
-                            ),
-                            actions = [|
-                                // Update button
-                                match model.Update with
-                                | UpdateState.LoadedSome update ->
-                                    IconButton(
-                                        icon = Icon(Icons.cloud_sync),
-                                        onPressed =
-                                            Components.Dialog.Update.show
-                                                context
-                                                (update.SoundsToDelete.Length + update.SoundsToDownload.Length)
-                                                (fun _ -> Msg.ApplyUpdate |> dispatch)
-                                    )
-                                | _ -> ()
-                            |]
-                        )
-                        SliverPadding(
-                            padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
-                            sliver =
-                                SliverGrid(
-                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount = 3,
-                                        mainAxisSpacing = buttonMargin,
-                                        crossAxisSpacing = buttonMargin,
-                                        childAspectRatio = 29. / 21.
-                                    ),
-                                    ``delegate`` = SliverChildBuilderDelegate(
-                                        childCount = sounds.Length,
-                                        builder = (fun ctx idx ->
-                                            let sound = sounds |> Array.item idx
-                                            Components.Sound.sound
-                                                ctx
-                                                sound.ImagePath
-                                                (fun _ ->
-                                                    match sound.AudioPlayer.state with
-                                                    | PlayerState.Playing -> sound.AudioPlayer.stop()
-                                                    | _ -> sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play
-                                                    |> ignore
-                                                )
-                                        )
+    Scaffold(body =
+        match model.Error, model.Update, model.Sounds with
+        | Some error, _, _ -> errorOcurred context error
+        | _, UpdateState.Loading , Loaded sounds when sounds.Length = 0 -> fetchingApi context
+        | _, UpdateState.ApplyingUpdate, _ -> applyingUpdate context
+        | _, _, Loading _ -> loadingSounds context
+        | _, _, Loaded sounds ->
+            CustomScrollView(
+                slivers = [|
+                    SliverAppBar(
+                        pinned = true,
+                        expandedHeight = (185. / 853.) * size.height,
+                        flexibleSpace = FlexibleSpaceBar(
+                            title = Text("Sounds", style = TextStyle(fontSize = 35, color = Theme.of'(context).colorScheme.onBackground)),
+                            centerTitle = true,
+                            titlePadding = EdgeInsets.only(bottom = 6.)
+                        ),
+                        actions = [|
+                            // Update button
+                            match model.Update with
+                            | UpdateState.LoadedSome update ->
+                                IconButton(
+                                    icon = Icon(Icons.cloud_sync),
+                                    onPressed =
+                                        Components.Dialog.Update.show
+                                            context
+                                            (update.SoundsToDelete.Length + update.SoundsToDownload.Length)
+                                            (fun _ -> Msg.ApplyUpdate |> dispatch)
+                                )
+                            | _ -> ()
+
+                            IconButton(
+                                icon = Icon(Icons.settings),
+                                onPressed = (fun _ -> Components.Dialog.Settings.show context model dispatch)
+                            )
+                        |]
+                    )
+                    SliverPadding(
+                        padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
+                        sliver =
+                            SliverGrid(
+                                gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount = 3,
+                                    mainAxisSpacing = buttonMargin,
+                                    crossAxisSpacing = buttonMargin,
+                                    childAspectRatio = 29. / 21.
+                                ),
+                                ``delegate`` = SliverChildBuilderDelegate(
+                                    childCount = sounds.Length,
+                                    builder = (fun ctx idx ->
+                                        let sound = sounds |> Array.item idx
+                                        Components.Sound.sound
+                                            ctx
+                                            sound.ImagePath
+                                            (fun _ -> toggleSound model sound)
+                                            (fun _ -> forceStopSound sound)
                                     )
                                 )
-                        )
-                        SliverToBoxAdapter(child = SizedBox(height = buttonMargin))
-                    |]
-                )
+                            )
+                    )
+                    SliverToBoxAdapter(child = SizedBox(height = buttonMargin))
+                |]
+            )
     )

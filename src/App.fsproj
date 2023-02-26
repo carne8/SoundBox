@@ -21,6 +21,8 @@
 
     <Compile Include="App/App.Types.fs" />
     <Compile Include="App/App.State.fs" />
+
+    <Compile Include="Components/SettingsDialog.fs" />
     <Compile Include="App/App.View.fs" />
 
     <Compile Include="main.fs" />

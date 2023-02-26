@@ -7,7 +7,7 @@ open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 
-let sound context imagePath onTap =
+let sound context imagePath onTap onLongPress =
     let primaryContainer = Theme.of'(context).colorScheme.primaryContainer
     let radius = (23. / 384.) * MediaQuery.of'(context).size.width
 
@@ -16,6 +16,7 @@ let sound context imagePath onTap =
 
     GestureDetector(
         onTap = onTap,
+        onLongPress = onLongPress,
         child = Container(
             child = image,
             padding = EdgeInsets.all 10.,

@@ -54,5 +54,3 @@ src/**/*.csproj
 
 secrets.json
 run.cmd
-
-.vscode/launch.json

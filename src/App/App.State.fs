@@ -56,7 +56,8 @@ module State =
           RemoteSounds = Loading None
           Sounds = Loading None
           Update = UpdateState.Loading
-          Error = None },
+          Error = None
+          SpamMode = false },
         Cmd.batch [
             Cmds.loadLocalSounds()
             Cmds.fetchRemoteSounds()
@@ -103,3 +104,5 @@ module State =
             | _ -> model, Cmd.none
 
         | Msg.UpdateApplied -> { model with Update = UpdateState.LoadedNone }, Cmds.loadLocalSounds()
+
+        | Msg.SettingsChanged newSettings -> { model with SpamMode = newSettings }, Cmd.none

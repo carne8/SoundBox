@@ -43,13 +43,16 @@ type Msg =
     | SoundsLoaded of Sound array
     | ErrorOcurred of string
 
-    | UpdateLoaded of Update option
+    | UpdateAvailable of Update
     | ApplyUpdate
     | UpdateApplied
+
+    | SettingsChanged of bool
 
 type Model =
     { LocalSounds: LocalSound array Loadable
       RemoteSounds: RemoteSound array Loadable
       Sounds: Sound array Loadable
       Update: UpdateState
-      Error: string option }
+      Error: string option
+      SpamMode: bool }
