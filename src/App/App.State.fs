@@ -32,6 +32,15 @@ module Cmds =
         )
 
 
+    let compareSounds localSounds remoteSounds =
+        Cmd.ofEffect (fun dispatch ->
+                (localSounds, remoteSounds)
+                ||> SoundUpdater.compareSounds
+                |> function
+                    | Some update -> update |> Msg.UpdateAvailable |> dispatch
+                    | None -> ()
+        )
+
     let applyUpdate (update: SoundUpdater.Update) =
         Cmd.ofEffect (fun dispatch ->
             update
@@ -60,11 +69,7 @@ module State =
         | Msg.LocalSoundsLoaded sounds ->
             let cmd =
                 match model.RemoteSounds with
-                | Loaded remoteSounds ->
-                    (sounds, remoteSounds)
-                    ||> SoundUpdater.compareSounds
-                    |> Msg.UpdateLoaded
-                    |> Cmd.ofMsg
+                | Loaded remoteSounds -> Cmds.compareSounds sounds remoteSounds
                 | Loading _ -> Cmd.none
 
             { model with LocalSounds = Loaded sounds },
@@ -73,11 +78,7 @@ module State =
         | Msg.RemoteSoundsLoaded sounds ->
             let cmd =
                 match model.LocalSounds with
-                | Loaded localSounds ->
-                    (localSounds, sounds)
-                    ||> SoundUpdater.compareSounds
-                    |> Msg.UpdateLoaded
-                    |> Cmd.ofMsg
+                | Loaded localSounds -> Cmds.compareSounds localSounds sounds
                 | Loading _ -> Cmd.none
 
             { model with RemoteSounds = Loaded sounds }, cmd
@@ -86,11 +87,13 @@ module State =
         | Msg.ErrorOcurred error -> { model with Error = Some error }, Cmd.none
 
         // Update
-        | Msg.UpdateLoaded updateOpt ->
-            match model.LocalSounds, updateOpt with
-            | Loaded sounds, Some update when sounds.Length > 0 -> { model with Update = UpdateState.LoadedSome update }, Cmd.none
-            | Loaded _, Some update -> { model with Update = UpdateState.ApplyingUpdate }, Cmds.applyUpdate update
-            | _ -> { model with Update = UpdateState.LoadedNone }, Cmd.none
+        | Msg.UpdateAvailable update ->
+            match model.LocalSounds with
+            | Loaded sounds ->
+                match sounds.Length with
+                | 0 -> { model with Update = UpdateState.ApplyingUpdate }, Cmds.applyUpdate update
+                | _ -> { model with Update = UpdateState.LoadedSome update }, Cmd.none
+            | _ -> { model with Update = UpdateState.LoadedSome update }, Cmd.none
 
         | Msg.ApplyUpdate ->
             match model.Update with

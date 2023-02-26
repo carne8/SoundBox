@@ -16,6 +16,9 @@
     <Compile Include="Features/FileManager.fs" />
     <Compile Include="Features/SoundUpdater.fs" />
 
+    <Compile Include="Components/SoundButton.fs" />
+    <Compile Include="Components/UpdateDialog.fs" />
+
     <Compile Include="App/App.Types.fs" />
     <Compile Include="App/App.State.fs" />
     <Compile Include="App/App.View.fs" />

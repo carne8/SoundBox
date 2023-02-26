@@ -2,89 +2,73 @@ module App.View
 
 open App
 open Fable.Core
-open Fable.Core.Dart
-open Fable.Dart.IO
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
 open Fable.Flutter.AudioPlayers
 
-// import "dart:core";
 
-type DartNullable<'T> with
-    static member inline singleton x = x |> Some |> DartNullable.ofOption
+let center children =
+    Center(child = Column(
+        mainAxisAlignment = MainAxisAlignment.center,
+        crossAxisAlignment = CrossAxisAlignment.center,
+        children = children
+    ))
 
-let soundComponent context (sound: Sound) =
-    let primaryContainer = Theme.of'(context).colorScheme.primaryContainer
-    let radius = (23. / 384.) * MediaQuery.of'(context).size.width
-
-    let imageProvider = sound.ImagePath |> File |> FileImage
-    let image = Image(image = imageProvider, fit = BoxFit.contain)
-
-    GestureDetector(
-        onTap = (fun _ ->
-            match sound.AudioPlayer.state with
-            | PlayerState.Playing -> sound.AudioPlayer.stop()
-            | _ -> sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play
-            |> ignore
-        ),
-        child = Container(
-            child = image,
-            padding = EdgeInsets.all 10.,
-            decoration = BoxDecoration(
-                color = primaryContainer,
-                borderRadius = BorderRadius.all(Dart.Radius.circular radius)
-            )
-        )
-    )
+let errorOcurred context error =
+    center [|
+        Text("An error ocurred", style = Theme.of'(context).textTheme.titleLarge)
+        Text(error, style = Theme.of'(context).textTheme.titleMedium, textAlign = Dart.TextAlign.center)
+    |]
     :> Widget
-    |> DartNullable.singleton
+
+let fetchingApi context =
+    Fable.Core.Dart.print "fetchingApi"
+    center [|
+        CircularProgressIndicator()
+        Padding(
+            padding = EdgeInsets.only(top = 35.),
+            child = Column(children = [|
+                Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
+                Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
+            |])
+        )
+    |]
+
+let applyingUpdate context =
+    center [|
+        CircularProgressIndicator()
+        Padding(
+            padding = EdgeInsets.only(top = 35.),
+            child = Text("Installing sounds...", style = Theme.of'(context).textTheme.titleLarge)
+        )
+    |]
+
+let loadingSounds context =
+    center [|
+        CircularProgressIndicator()
+        Padding(
+            padding = EdgeInsets.only(top = 35.),
+            child = Text("Loading sounds...", style = Theme.of'(context).textTheme.titleLarge)
+        )
+    |]
+
 
 let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget =
     let size = MediaQuery.of'(context).size
     let buttonMargin = 0.038 * size.width
+    match model.Sounds with
+    | Loaded sounds -> sounds.Length |> Dart.print
+    | _ -> Dart.print "Loading..."
 
     Scaffold(
         body =
             match model.Error, model.Update, model.Sounds with
-            | Some error, _, _ ->
-                Center(child = Column(
-                    mainAxisAlignment = MainAxisAlignment.center,
-                    crossAxisAlignment = CrossAxisAlignment.center,
-                    children = [|
-                        Text("An error ocurred", style = Theme.of'(context).textTheme.titleLarge)
-                        Text(error, style = Theme.of'(context).textTheme.titleMedium, textAlign = Dart.TextAlign.center)
-                    |]
-                )) :> Widget
-            | _, _, Loading _ -> Center(child = Text("Loading sounds"))
-            | _, UpdateState.ApplyingUpdate, Loaded _ ->
-                Center(child = Column(
-                    mainAxisAlignment = MainAxisAlignment.center,
-                    crossAxisAlignment = CrossAxisAlignment.center,
-                    children = [|
-                        CircularProgressIndicator()
-                        Padding(
-                            padding = EdgeInsets.only(top = 35.),
-                            child = Text("Installing sounds ...", style = Theme.of'(context).textTheme.titleLarge)
-                        )
-                    |]
-                ))
-            | _, _, Loaded sounds when sounds.Length = 0 ->
-                Center(child = Column(
-                    mainAxisAlignment = MainAxisAlignment.center,
-                    crossAxisAlignment = CrossAxisAlignment.center,
-                    children = [|
-                        CircularProgressIndicator()
-                        Padding(
-                            padding = EdgeInsets.only(top = 35.),
-                            child = Column(children = [|
-                                Text("No sounds installed", style = Theme.of'(context).textTheme.titleLarge)
-                                Text("Searching for sounds online...", style = Theme.of'(context).textTheme.titleMedium)
-                            |])
-                        )
-                    |]
-                ))
+            | Some error, _, _ -> errorOcurred context error
+            | _, UpdateState.Loading , Loaded sounds when sounds.Length = 0 -> fetchingApi context
+            | _, UpdateState.ApplyingUpdate, _ -> applyingUpdate context
+            | _, _, Loading _ -> loadingSounds context
             | _, _, Loaded sounds ->
                 CustomScrollView(
                     slivers = [|
@@ -97,36 +81,16 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                                 titlePadding = EdgeInsets.only(bottom = 6.)
                             ),
                             actions = [|
+                                // Update button
                                 match model.Update with
                                 | UpdateState.LoadedSome update ->
-                                    let totalOperations = update.SoundsToDelete.Length + update.SoundsToDownload.Length
-
                                     IconButton(
                                         icon = Icon(Icons.cloud_sync),
-                                        onPressed = (fun _ ->
-                                            showDialog(
-                                                context = context,
-                                                builder = (fun _ctx -> AlertDialog(
-                                                    title = Text("Perform update ?", textAlign = Dart.TextAlign.center),
-                                                    content = Text($"This update will perform {totalOperations} operations", textAlign = Dart.TextAlign.center),
-                                                    actionsAlignment = MainAxisAlignment.spaceBetween,
-                                                    actions = [|
-                                                        OutlinedButton(
-                                                            style = ButtonStyle(),
-                                                            child = Text "Cancel",
-                                                            onPressed = Navigator.``of``(context).pop
-                                                        )
-                                                        FilledButton(
-                                                            child = (Text "Update"),
-                                                            onPressed = (fun _ ->
-                                                                Navigator.``of``(context).pop()
-                                                                Msg.ApplyUpdate |> dispatch
-                                                            )
-                                                        )
-                                                    |]
-                                                ))
-                                            ) |> ignore
-                                        )
+                                        onPressed =
+                                            Components.Dialog.Update.show
+                                                context
+                                                (update.SoundsToDelete.Length + update.SoundsToDownload.Length)
+                                                (fun _ -> Msg.ApplyUpdate |> dispatch)
                                     )
                                 | _ -> ()
                             |]
@@ -135,10 +99,26 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                             padding = (EdgeInsets.only(top = 60., left = buttonMargin, right = buttonMargin)),
                             sliver =
                                 SliverGrid(
-                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(3, mainAxisSpacing = buttonMargin, crossAxisSpacing = buttonMargin, childAspectRatio = 29. / 21.),
+                                    gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount = 3,
+                                        mainAxisSpacing = buttonMargin,
+                                        crossAxisSpacing = buttonMargin,
+                                        childAspectRatio = 29. / 21.
+                                    ),
                                     ``delegate`` = SliverChildBuilderDelegate(
                                         childCount = sounds.Length,
-                                        builder = (fun ctx idx -> sounds |> Array.item idx |> soundComponent ctx)
+                                        builder = (fun ctx idx ->
+                                            let sound = sounds |> Array.item idx
+                                            Components.Sound.sound
+                                                ctx
+                                                sound.ImagePath
+                                                (fun _ ->
+                                                    match sound.AudioPlayer.state with
+                                                    | PlayerState.Playing -> sound.AudioPlayer.stop()
+                                                    | _ -> sound.SoundPath |> DeviceFileSource |> sound.AudioPlayer.play
+                                                    |> ignore
+                                                )
+                                        )
                                     )
                                 )
                         )
