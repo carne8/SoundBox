@@ -1,4 +1,4 @@
-module Fable.Flutter.PathProvider
+module Flutter.PathProvider
 
 open Fable.Core
 open Fable.Core.Dart

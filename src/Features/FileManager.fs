@@ -5,8 +5,8 @@ open Fable.Dart.IO
 open Fable.Dart.Future
 open App.API.Sounds
 
-open Fable.Flutter.PathProvider
-open Fable.Flutter.Dio
+open Flutter.PathProvider
+open Flutter.Dio
 
 type LocalSound =
     { Name: string

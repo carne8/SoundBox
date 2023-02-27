@@ -45,6 +45,6 @@ type Sound(image, onTap, onLongPress) =
     override _.createState() = SoundState(image, onTap, onLongPress)
 
 
-let sound context imagePath onTap onLongPress =
+let sound imagePath onTap onLongPress =
     let imageProvider = imagePath |> File |> FileImage
-    Sound(imageProvider, onTap, onLongPress) |> Some |> DartNullable.ofOption
+    Sound(imageProvider, onTap, onLongPress) :> Widget |> Some |> DartNullable.ofOption

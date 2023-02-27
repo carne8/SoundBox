@@ -1,4 +1,4 @@
-module Fable.Flutter.Dio
+module Flutter.Dio
 
 open Fable.Core
 open Fable.Dart

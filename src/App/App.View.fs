@@ -6,7 +6,7 @@ open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
-open Fable.Flutter.AudioPlayers
+open Flutter.AudioPlayers
 
 
 let center children =
@@ -121,7 +121,6 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                                     builder = (fun ctx idx ->
                                         let sound = sounds |> Array.item idx
                                         Components.Sound.sound
-                                            ctx
                                             sound.ImagePath
                                             (fun _ -> toggleSound model sound)
                                             (fun _ -> forceStopSound sound)

@@ -4,12 +4,12 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Libs/Fable.Flutter.Http.fs" />
-    <Compile Include="Libs/Fable.Flutter.Dotenv.fs" />
-    <Compile Include="Libs/Fable.Flutter.PathProvider.fs" />
-    <Compile Include="Libs/Fable.Flutter.Dio.fs" />
-    <Compile Include="Libs/Fable.Flutter.AudioPlayers.fs" />
-    <Compile Include="Libs/DynamicColor.fs" />
+    <Compile Include="Libs/Flutter.Http.fs" />
+    <Compile Include="Libs/Flutter.Dotenv.fs" />
+    <Compile Include="Libs/Flutter.PathProvider.fs" />
+    <Compile Include="Libs/Flutter.Dio.fs" />
+    <Compile Include="Libs/Flutter.AudioPlayers.fs" />
+    <Compile Include="Libs/Flutter.DynamicColor.fs" />
 
     <Compile Include="Features/Notion.API.fs" />
     <Compile Include="Features/Sounds.API.fs" />

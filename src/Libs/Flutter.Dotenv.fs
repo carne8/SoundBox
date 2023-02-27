@@ -1,5 +1,5 @@
 /// https://pub.dev/packages/dotenv
-module Fable.Flutter.Dotenv
+module Flutter.Dotenv
 
 open Fable.Core
 open Fable.Core.Dart

@@ -1,6 +1,6 @@
 namespace App
 
-open Fable.Flutter.AudioPlayers
+open Flutter.AudioPlayers
 
 open API.Sounds
 open FileManager
