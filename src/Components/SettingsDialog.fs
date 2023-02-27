@@ -1,10 +1,8 @@
 module rec App.Components.Dialog.Settings
 
 open App
-open Fable.Core
 open Flutter.Widgets
 open Flutter.Material
-open Flutter.Painting
 open Flutter.Rendering
 
 type SettingsState(model: Model, dispatch: Elmish.Dispatch<Msg>) =
