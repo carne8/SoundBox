@@ -398,27 +398,27 @@ type ResizeImage [<IsConst; NamedParams(fromIndex=1)>] (imageProvider: ImageProv
 /// https://api.flutter.dev/flutter/painting/NetworkImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type NetworkImage [<IsConst; NamedParams(fromIndex=1)>] (url: string, [<Optional>] scale: float, [<Optional>] headers: Dictionary<string, string>) =
-  inherit ImageProvider<Object>()
+  inherit ImageProvider<obj>()
 
 /// https://api.flutter.dev/flutter/painting/FileImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type FileImage [<IsConst; NamedParams(fromIndex=1)>] (file: Fable.Dart.IO.File, [<Optional>] scale: float) =
-  inherit ImageProvider<Object>()
+  inherit ImageProvider<obj>()
 
 /// https://api.flutter.dev/flutter/painting/MemoryImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type MemoryImage [<IsConst; NamedParams(fromIndex=1)>] (bytes: byte[], [<Optional>] scale: float) =
-  inherit ImageProvider<Object>()
+  inherit ImageProvider<obj>()
 
 /// https://api.flutter.dev/flutter/painting/ExactAssetImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type ExactAssetImage [<IsConst; NamedParams(fromIndex=1)>] (assetName: string, [<Optional>] scale: float, [<Optional>] bundle: AssetBundle, [<Optional>] package: string) =
-  inherit ImageProvider<Object>()
+  inherit ImageProvider<obj>()
 
 /// https://api.flutter.dev/flutter/painting/AssetImage-class.html
 [<ImportMember("package:flutter/painting.dart")>]
 type AssetImage [<IsConst; NamedParams(fromIndex=1)>] (assetName: string, [<Optional>] bundle: AssetBundle, [<Optional>] package: string) =
-  inherit ImageProvider<Object>()
+  inherit ImageProvider<obj>()
 
 /// https://api.flutter.dev/flutter/painting/ImageInfo-class.html
 [<ImportMember("package:flutter/painting.dart")>]

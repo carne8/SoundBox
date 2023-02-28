@@ -10,6 +10,7 @@
     <Compile Include="Libs/Flutter.Dio.fs" />
     <Compile Include="Libs/Flutter.AudioPlayers.fs" />
     <Compile Include="Libs/Flutter.DynamicColor.fs" />
+    <Compile Include="Libs/Flutter.PackageInfoPlus.fs" />
 
     <Compile Include="Features/Notion.API.fs" />
     <Compile Include="Features/Sounds.API.fs" />

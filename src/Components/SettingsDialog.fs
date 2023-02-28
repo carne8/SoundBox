@@ -4,6 +4,9 @@ open App
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Rendering
+open Flutter.Painting
+open Flutter.PackageInfoPlus
+open Fable.Dart.Future
 
 type SettingsState(model: Model, dispatch: Elmish.Dispatch<Msg>) =
     inherit State<Settings>()
@@ -16,17 +19,63 @@ type SettingsState(model: Model, dispatch: Elmish.Dispatch<Msg>) =
             _spamMode <- value
 
     override this.build context =
-        AlertDialog(
+        SimpleDialog(
             title = Text("Settings"),
-            content = Row(
-                children = [|
-                    Text("Spam mode")
-                    Switch(value = this.spamMode, onChanged = (fun newValue -> this.setState(fun _ -> this.spamMode <- newValue)))
-                |],
-                mainAxisAlignment = MainAxisAlignment.spaceBetween
-            ),
-            actions = [| TextButton(child = Text "OK", onPressed = (fun _ -> Navigator.``of``(context).pop())) |]
-        ) :> Widget
+            children = [|
+                // Spam mode
+                SimpleDialogOption(
+                    onPressed = (fun _ -> this.setState(fun _ -> this.spamMode <- not this.spamMode)),
+                    child = Row(
+                        mainAxisAlignment = MainAxisAlignment.spaceBetween,
+                        children = [|
+                            Text("Spam mode")
+                            Switch(value = this.spamMode, onChanged = (fun newValue -> this.setState(fun _ -> this.spamMode <- newValue)))
+                        |]
+                    )
+                ) :> Widget
+
+                // About / License
+                SimpleDialogOption(
+                    onPressed = (fun _ ->
+                        PackageInfo.fromPlatform()
+                        |> Future.map (fun packageInfo ->
+                            showLicensePage(
+                                context = context,
+                                applicationName = "SoundBox",
+                                applicationVersion = packageInfo.version,
+                                applicationIcon = Padding(
+                                    padding = EdgeInsets.fromLTRB(10., 20., 10., 10.),
+                                    child = SizedBox(
+                                        width = 70.,
+                                        height = 70.,
+                                        child = ClipRRect(
+                                            borderRadius = BorderRadius.circular(23.),
+                                            child = Image.asset("assets/icons/icon.png")
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                        |> ignore
+                    ),
+                    child = Text("About / Licenses")
+                ) :> Widget
+
+                // OK button
+                Padding(
+                    padding = EdgeInsets.only(right = 15.),
+                    child = Row(
+                        mainAxisAlignment = MainAxisAlignment.``end``,
+                        children = [|
+                            TextButton(
+                                child = Text("OK"),
+                                onPressed = (fun _ -> Navigator.pop(context))
+                            )
+                        |]
+                    )
+                )
+            |]
+        )
 
 type Settings(model: Model, dispatch: Elmish.Dispatch<Msg>) =
     inherit StatefulWidget()
