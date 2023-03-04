@@ -1,14 +1,13 @@
 module rec App.Components.Sound
 
 open Fable.Core
-open Fable.Core.Dart
-open Fable.Dart.IO
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Animation
+open Flutter.Foundation
 
-type SoundState(image, onTap, onLongPress) =
+type SoundState(image: FileImage, onTap, onLongPress) =
     inherit State<Sound>()
 
     member val scale = 1. with get, set
@@ -40,11 +39,6 @@ type SoundState(image, onTap, onLongPress) =
             )
         ) :> Widget
 
-type Sound(image, onTap, onLongPress) =
-    inherit StatefulWidget()
+type Sound(image, onTap, onLongPress, ?key: Key) =
+    inherit StatefulWidget(?key = key)
     override _.createState() = SoundState(image, onTap, onLongPress)
-
-
-let sound imagePath onTap onLongPress =
-    let imageProvider = imagePath |> File |> FileImage
-    Sound(imageProvider, onTap, onLongPress) :> Widget |> Some |> DartNullable.ofOption

@@ -2,10 +2,13 @@ module App.View
 
 open App
 open Fable.Core
+open Fable.Core.Dart
+open Fable.Dart.IO
 open Flutter.Widgets
 open Flutter.Material
 open Flutter.Painting
 open Flutter.Rendering
+open Flutter.Foundation
 open Flutter.AudioPlayers
 
 
@@ -118,12 +121,18 @@ let view (model: Model) (dispatch: Msg -> unit) (context: BuildContext) : Widget
                                 ),
                                 ``delegate`` = SliverChildBuilderDelegate(
                                     childCount = sounds.Length,
-                                    builder = (fun ctx idx ->
+                                    builder = (fun _ctx idx ->
                                         let sound = sounds |> Array.item idx
-                                        Components.Sound.sound
-                                            sound.ImagePath
-                                            (fun _ -> toggleSound model sound)
-                                            (fun _ -> forceStopSound sound)
+
+                                        Components.Sound.Sound(
+                                            key = Key(string model.SpamMode),
+                                            image = (sound.ImagePath |> File |> FileImage),
+                                            onTap = (fun _ -> toggleSound model sound),
+                                            onLongPress = (fun _ -> forceStopSound sound)
+                                        )
+                                        :> Widget
+                                        |> Some
+                                        |> DartNullable.ofOption
                                     )
                                 )
                             )
