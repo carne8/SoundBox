@@ -39,6 +39,7 @@ type SettingsState(model: Model, dispatch: Elmish.Dispatch<Msg>) =
                     onPressed = (fun _ ->
                         PackageInfo.fromPlatform()
                         |> Future.map (fun packageInfo ->
+                            Navigator.pop context
                             showLicensePage(
                                 context = context,
                                 applicationName = "SoundBox",
@@ -59,7 +60,7 @@ type SettingsState(model: Model, dispatch: Elmish.Dispatch<Msg>) =
                         |> ignore
                     ),
                     child = Text("About / Licenses")
-                ) :> Widget
+                )
 
                 // OK button
                 Padding(
